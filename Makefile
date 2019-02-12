@@ -6,7 +6,7 @@ SRC = $(SRC_DIR)/*.c
 OUT = sudoku
 
 build: $(SRC)
-	$(CC) $(SRC) -o $(OUT) -I $(INC_DIR) -lm
+	$(CC) $(SRC) -o $(OUT) -I $(INC_DIR) -lm -g
 
 clean:
 	rm -f *.o $(OUT)

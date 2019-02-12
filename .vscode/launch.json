@@ -28,7 +28,7 @@
                 }
             ],
             "sourceFileMap": {
-                "/mnt/c/Users/yanpa/source/repos/sudoku-coloracao-grafos/": "C:/Users/yanpa/source/repos/sudoku-coloracao-grafos/"
+                "/mnt/c/": "C:/"
             }
         }
     ]
