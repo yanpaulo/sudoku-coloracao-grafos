@@ -1,20 +1,35 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 #include "grafos.h"
+
+int compara_cor(vertice *v1, vertice *v2)
+{
+    return v2->cor < v1->cor;
+}
 
 int grau_saturado(vertice *v)
 {
-    return 0;
+    int grau = 0;
+    vertice** vizinhos = v->vizinhos;
+    ordena(v->vizinhos, v->num_vizinhos, compara_cor);
+    for (int i = 0; i < v->num_vizinhos; i++)
+    {
+        vertice *v = vizinhos[0];
+        if (i == 0 || vizinhos[i - 1]->cor != v->cor)
+        {
+            ++grau;
+        }
+    }
+
+    return grau;
 }
 int compara_grau_saturado(vertice *v1, vertice *v2)
 {
     return grau_saturado(v2) > grau_saturado(v1);
 }
-int compara_cor(vertice *v1, vertice *v2)
-{
-    return v2->cor < v1->cor;
-}
+
 void ordena(vertice **lista, int tamanho, int (*comparador)(vertice *, vertice *))
 {
     for (int i = 0; i < tamanho; i++)
@@ -32,6 +47,19 @@ void ordena(vertice **lista, int tamanho, int (*comparador)(vertice *, vertice *
         }
     }
 }
+
+void ordena_2(vertice **lista, int (*comparador)(vertice *, vertice *))
+{
+    int tamanho = 0;
+    vertice **head = lista;
+    while (*lista++)
+    {
+        ++tamanho;
+    }
+
+    ordena(head, tamanho, comparador);
+}
+
 vertice *get_vertice(grafo *g, int i, int j)
 {
     return g->vertices[i * g->lado + j];
@@ -113,9 +141,9 @@ void imprime_vertice(vertice *v)
 void imprime_vizinhos(vertice *v)
 {
     printf("[");
-    for(int i=0; i<v->num_vizinhos; i++)
+    for (int i = 0; i < v->num_vizinhos; i++)
     {
-        vertice* viz = v->vizinhos[i];
+        vertice *viz = v->vizinhos[i];
         printf(" %d ", viz->cor);
         if (i < v->num_vizinhos - 1)
         {
@@ -125,14 +153,14 @@ void imprime_vizinhos(vertice *v)
     printf("]\n");
 }
 
-vertice **get_vertices_sem_cor(grafo *g)
+vertice **get_vertices_cor(grafo *g, int cor)
 {
     vertice **lista = (vertice **)calloc(g->tamanho, sizeof(vertice *) + 1);
     int num_elementos = 0;
     for (int i = 0; i < g->tamanho; i++)
     {
         vertice *elemento = g->vertices[i];
-        if (elemento->cor)
+        if (elemento->cor == cor)
         {
             lista[num_elementos++] = elemento;
         }
@@ -140,24 +168,64 @@ vertice **get_vertices_sem_cor(grafo *g)
     lista = realloc(lista, sizeof(vertice *) * num_elementos + 1);
 
     ordena(lista, num_elementos, compara_grau_saturado);
+
+    return lista;
+}
+
+int tem_vizinhos_cor(vertice *v, int cor)
+{
+    for (int i = 0; i < v->num_vizinhos; i++)
+    {
+        if (v->vizinhos[i]->cor == cor)
+        {
+            return 1;
+        }
+    }
+
+    return 0;
 }
 
 void colore_grafo(grafo *g)
 {
+    int num_cor = 0;
+    vertice **lista = get_vertices_cor(g, 0);
+    do
+    {
+        vertice *v = *lista;
+        while (v)
+        {
+            if (!tem_vizinhos_cor(v, num_cor))
+            {
+                v->cor = num_cor;
+            }
+            v = *(++lista);
+        }
+        ++num_cor;
+        lista = get_vertices_cor(g, 0);
+    } while (*lista);
+
     for (int i = 0; i < g->tamanho; i++)
     {
-        if (g->vertices[i]->cor) {
+        g->vertices[i]->cor--;
+    }
+
+#ifdef OUTRO_ALGORITMO
+    for (int i = 0; i < g->tamanho; i++)
+    {
+        if (g->vertices[i]->cor)
+        {
             continue;
         }
-        
+
         vertice *item = g->vertices[i];
         ordena(item->vizinhos, item->num_vizinhos, compara_cor);
         imprime_vizinhos(item);
         int cor = 1;
-        for(int j = 0; j < item->num_vizinhos; j++)
+        for (int j = 0; j < item->num_vizinhos; j++)
         {
-            vertice* viz = item->vizinhos[j];
-            if (cor < viz->cor) {
+            vertice *viz = item->vizinhos[j];
+            if (cor < viz->cor)
+            {
                 break;
             }
             cor = item->vizinhos[j]->cor + 1;
@@ -166,26 +234,26 @@ void colore_grafo(grafo *g)
         printf("Pick %d\n", cor);
     }
 
-    for(int i = 0; i < g->tamanho; i++)
+    for (int i = 0; i < g->tamanho; i++)
     {
         g->vertices[i]->cor--;
     }
-    
+#endif
 }
 
-void imprime_grafo(grafo* g)
+void imprime_grafo(grafo *g)
 {
-    for(int i = 0; i < g->lado; i++)
+    for (int i = 0; i < g->lado; i++)
     {
-        for(int j = 0; j < g->lado; j++)
+        for (int j = 0; j < g->lado; j++)
         {
             printf("%d", get_vertice(g, i, j)->cor);
-            if (j < g->lado - 1) {
+            if (j < g->lado - 1)
+            {
                 printf(",");
             }
             printf(" ");
         }
         printf("\n");
     }
-    
 }

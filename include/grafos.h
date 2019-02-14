@@ -16,7 +16,10 @@ typedef struct grafo
     vertice** vertices;
 } grafo;
 
-vertice** get_vertices_sem_cor(grafo* g);
+void ordena(vertice **lista, int tamanho, int (*comparador)(vertice *, vertice *));
+
+
+vertice **get_vertices_cor(grafo *g, int cor);
 
 grafo* le_grafo(int* vertices, int tamanho);
 vertice* get_vertice(grafo* g, int i, int j);
@@ -24,5 +27,7 @@ void colore_grafo(grafo *g);
 void imprime_grafo(grafo* g);
 void imprime_vertice(vertice* v);
 void imprime_vizinhos(vertice* v);
+
+
 
 #endif // GRAFOS_H_
