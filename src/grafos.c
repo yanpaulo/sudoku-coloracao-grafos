@@ -16,8 +16,8 @@ int grau_saturado(vertice *v)
     ordena(v->vizinhos, v->num_vizinhos, compara_cor);
     for (int i = 0; i < v->num_vizinhos; i++)
     {
-        vertice *v = vizinhos[0];
-        if (i == 0 || vizinhos[i - 1]->cor != v->cor)
+        vertice *v = vizinhos[i];
+        if (v->cor && (i == 0 || vizinhos[i - 1]->cor != v->cor))
         {
             ++grau;
         }
