@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include "grafos.h"
 
+//As Regions 'Ordenação' e 'Operações de Cor' contem definições e implementações de funções internas.
+
 #pragma region Ordenação
 //Retorna o grau de saturação do vértice v
 int grau_saturacao(vertice *v);
@@ -34,7 +36,6 @@ int grau_saturacao(vertice *v)
     return grau;
 }
 
-//Retorna 1 se o grau de saturação de v2 for maior que o de v1
 int compara_grau_saturacao(vertice *v1, vertice *v2)
 {
     int g1 = grau_saturacao(v1),
@@ -46,13 +47,11 @@ int compara_grau_saturacao(vertice *v1, vertice *v2)
     return conta_vizinhos_coloridos(v2) > conta_vizinhos_coloridos(v1);
 }
 
-//Retorna 1 se a cor de v2 for menor que a cor de v1
 int compara_cor(vertice *v1, vertice *v2)
 {
     return v2->cor < v1->cor;
 }
 
-//Ordena a lista de tamanho especificado utilizando a função de comparação especificada
 void ordena(vertice **lista, int tamanho, int (*comparador)(vertice *, vertice *))
 {
     for (int i = 0; i < tamanho; i++)
@@ -86,8 +85,6 @@ int tem_vizinhos_cor_igual(vertice *v, int cor);
 int menor_cor(vertice *v);
 
 
-//Retorna os vértices do grafo com a cor especificada,
-//ordenados por grau de saturação
 vertice **get_vertices_cor(grafo *g, int cor)
 {
     vertice **lista = (vertice **)calloc(g->tamanho, sizeof(vertice *) + 1);
@@ -106,7 +103,6 @@ vertice **get_vertices_cor(grafo *g, int cor)
     return lista;
 }
 
-//Retorna a quantidade de vizinhos com cor
 int conta_vizinhos_coloridos(vertice* v)
 {
     int num = 0;
@@ -120,7 +116,6 @@ int conta_vizinhos_coloridos(vertice* v)
     return num;
 }
 
-//Retorna os vizinhos de cor igual à especificada
 int tem_vizinhos_cor_igual(vertice *v, int cor)
 {
     for (int i = 0; i < v->num_vizinhos; i++)
@@ -133,7 +128,6 @@ int tem_vizinhos_cor_igual(vertice *v, int cor)
     return 0;
 }
 
-//Retorna a menor cor válida para o vértice v
 int menor_cor(vertice *v)
 {
     int num_cor;
