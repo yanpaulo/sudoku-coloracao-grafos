@@ -127,7 +127,7 @@ void colore_grafo(grafo *g)
     int num_cor = 1;
     vertice **lista = get_vertices_cor(g, 0);
 
-    while (*lista && num_cor <= 9)
+    while (*lista)
     {
         vertice *v = *lista;
         while (v)
