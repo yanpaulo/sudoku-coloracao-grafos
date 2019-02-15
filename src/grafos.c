@@ -1,19 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <string.h>
 #include "grafos.h"
 
-int compara_cor(vertice *v1, vertice *v2)
-{
-    return v2->cor < v1->cor;
-}
+int compara_cor(vertice *v1, vertice *v2);
 
-int grau_saturado(vertice *v)
+int grau_saturacao(vertice *v)
 {
     int grau = 0;
-    vertice** vizinhos = v->vizinhos;
-    ordena(v->vizinhos, v->num_vizinhos, compara_cor);
+    vertice **vizinhos = v->vizinhos;
+    ordena(vizinhos, v->num_vizinhos, compara_cor);
     for (int i = 0; i < v->num_vizinhos; i++)
     {
         vertice *v = vizinhos[i];
@@ -25,9 +21,15 @@ int grau_saturado(vertice *v)
 
     return grau;
 }
-int compara_grau_saturado(vertice *v1, vertice *v2)
+
+int compara_grau_saturacao(vertice *v1, vertice *v2)
 {
-    return grau_saturado(v2) > grau_saturado(v1);
+    return grau_saturacao(v2) > grau_saturacao(v1);
+}
+
+int compara_cor(vertice *v1, vertice *v2)
+{
+    return v2->cor < v1->cor;
 }
 
 void ordena(vertice **lista, int tamanho, int (*comparador)(vertice *, vertice *))
@@ -48,17 +50,101 @@ void ordena(vertice **lista, int tamanho, int (*comparador)(vertice *, vertice *
     }
 }
 
-void ordena_2(vertice **lista, int (*comparador)(vertice *, vertice *))
-{
-    int tamanho = 0;
-    vertice **head = lista;
-    while (*lista++)
-    {
-        ++tamanho;
-    }
 
-    ordena(head, tamanho, comparador);
+vertice **get_vertices_cor(grafo *g, int cor)
+{
+    vertice **lista = (vertice **)calloc(g->tamanho, sizeof(vertice *) + 1);
+    int num_elementos = 0;
+    for (int i = 0; i < g->tamanho; i++)
+    {
+        vertice *elemento = g->vertices[i];
+        if (elemento->cor == cor)
+        {
+            lista[num_elementos++] = elemento;
+        }
+    }
+    lista = realloc(lista, sizeof(vertice *) * num_elementos + 1);
+
+    ordena(lista, num_elementos, compara_grau_saturacao);
+
+    return lista;
 }
+
+vertice **vizinhos_cor_diferente(vertice *v, int cor)
+{
+    int num = 0;
+    vertice **list = calloc(v->num_vizinhos, sizeof(vertice *) + 1);
+    for (int i = 0; i < v->num_vizinhos; i++)
+    {
+        vertice *vizinho = v->vizinhos[i];
+        if (vizinho->cor != cor)
+        {
+            list[num++] = vizinho;
+        }
+    }
+    ordena(list, num, compara_cor);
+    return list;
+}
+
+int tem_vizinhos_cor_igual(vertice *v, int cor)
+{
+    for (int i = 0; i < v->num_vizinhos; i++)
+    {
+        if (v->vizinhos[i]->cor == cor)
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int menor_cor(vertice **list)
+{
+    int cor = 1;
+    while (1)
+    {
+        vertice **head = list;
+        while (*head)
+        {
+            vertice *item = *head;
+            vertice *proximo = *(head + 1);
+            if (item->cor == cor)
+            {
+                break;
+            }
+            else if (!proximo || proximo->cor > cor)
+            {
+                return cor;
+            }
+            ++head;
+        }
+        ++cor;
+    }
+}
+
+void colore_grafo(grafo *g)
+{
+    int num_cor = 1;
+    vertice **lista = get_vertices_cor(g, 0);
+
+    while (*lista && num_cor <= 9)
+    {
+        vertice *v = *lista;
+        while (v)
+        {
+            if (!tem_vizinhos_cor_igual(v, num_cor))
+            {
+                v->cor = num_cor;
+            }
+
+            v = *(++lista);
+        }
+        lista = get_vertices_cor(g, 0);
+        ++num_cor;
+    }
+}
+
+#pragma region Grafos
 
 vertice *get_vertice(grafo *g, int i, int j)
 {
@@ -153,94 +239,6 @@ void imprime_vizinhos(vertice *v)
     printf("]\n");
 }
 
-vertice **get_vertices_cor(grafo *g, int cor)
-{
-    vertice **lista = (vertice **)calloc(g->tamanho, sizeof(vertice *) + 1);
-    int num_elementos = 0;
-    for (int i = 0; i < g->tamanho; i++)
-    {
-        vertice *elemento = g->vertices[i];
-        if (elemento->cor == cor)
-        {
-            lista[num_elementos++] = elemento;
-        }
-    }
-    lista = realloc(lista, sizeof(vertice *) * num_elementos + 1);
-
-    ordena(lista, num_elementos, compara_grau_saturado);
-
-    return lista;
-}
-
-int tem_vizinhos_cor(vertice *v, int cor)
-{
-    for (int i = 0; i < v->num_vizinhos; i++)
-    {
-        if (v->vizinhos[i]->cor == cor)
-        {
-            return 1;
-        }
-    }
-
-    return 0;
-}
-
-void colore_grafo(grafo *g)
-{
-    int num_cor = 0;
-    vertice **lista = get_vertices_cor(g, 0);
-    do
-    {
-        vertice *v = *lista;
-        while (v)
-        {
-            if (!tem_vizinhos_cor(v, num_cor))
-            {
-                v->cor = num_cor;
-            }
-            v = *(++lista);
-        }
-        ++num_cor;
-        lista = get_vertices_cor(g, 0);
-    } while (*lista);
-
-    for (int i = 0; i < g->tamanho; i++)
-    {
-        g->vertices[i]->cor--;
-    }
-
-#ifdef OUTRO_ALGORITMO
-    for (int i = 0; i < g->tamanho; i++)
-    {
-        if (g->vertices[i]->cor)
-        {
-            continue;
-        }
-
-        vertice *item = g->vertices[i];
-        ordena(item->vizinhos, item->num_vizinhos, compara_cor);
-        imprime_vizinhos(item);
-        int cor = 1;
-        for (int j = 0; j < item->num_vizinhos; j++)
-        {
-            vertice *viz = item->vizinhos[j];
-            if (cor < viz->cor)
-            {
-                break;
-            }
-            cor = item->vizinhos[j]->cor + 1;
-        }
-        item->cor = cor;
-        printf("Pick %d\n", cor);
-    }
-
-    for (int i = 0; i < g->tamanho; i++)
-    {
-        g->vertices[i]->cor--;
-    }
-#endif
-}
-
 void imprime_grafo(grafo *g)
 {
     for (int i = 0; i < g->lado; i++)
@@ -257,3 +255,5 @@ void imprime_grafo(grafo *g)
         printf("\n");
     }
 }
+
+#pragma endregion
