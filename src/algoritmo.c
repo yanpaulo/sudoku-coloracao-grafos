@@ -1,9 +1,8 @@
 #include <stdlib.h>
 #include "grafos.h"
 
-//As Regions 'Ordenação' e 'Operações de Cor' contem definições e implementações de funções internas.
+#pragma region Definições
 
-#pragma region Ordenação
 //Retorna o grau de saturação do vértice v
 int grau_saturacao(vertice *v);
 
@@ -18,6 +17,23 @@ int compara_cor(vertice *v1, vertice *v2);
 
 //Ordena a lista de tamanho especificado utilizando a função de comparação especificada
 void ordena(vertice **lista, int tamanho, int (*comparador)(vertice *, vertice *));
+
+//Retorna os vértices do grafo com a cor especificada,
+//ordenados por grau de saturação
+vertice **get_vertices_cor(grafo *g, int cor);
+
+//Retorna os vizinhos de cor igual à especificada
+int tem_vizinhos_cor_igual(vertice *v, int cor);
+
+//Retorna a quantidade de vizinhos com cor
+int conta_vizinhos_coloridos(vertice* v);
+
+//Retorna a menor cor válida para o vértice v
+int menor_cor(vertice *v);
+
+#pragma endregion
+
+#pragma region Ordenação
 
 int grau_saturacao(vertice *v)
 {
@@ -73,17 +89,6 @@ void ordena(vertice **lista, int tamanho, int (*comparador)(vertice *, vertice *
 #pragma endregion
 
 #pragma region Operações de Cor
-
-//Retorna os vértices do grafo com a cor especificada,
-//ordenados por grau de saturação
-vertice **get_vertices_cor(grafo *g, int cor);
-
-//Retorna os vizinhos de cor igual à especificada
-int tem_vizinhos_cor_igual(vertice *v, int cor);
-
-//Retorna a menor cor válida para o vértice v
-int menor_cor(vertice *v);
-
 
 vertice **get_vertices_cor(grafo *g, int cor)
 {
