@@ -1,6 +1,6 @@
 #if !defined(GRAFOS_H_)
 #define GRAFOS_H_
-//Estruturas e funções para a leitura de grafos para o problema de Sudoku
+/* Estruturas e funções para a leitura de grafos para o problema de Sudoku */
 
 //Vértice de um grafo
 typedef struct vertice
@@ -20,15 +20,25 @@ typedef struct grafo
 } grafo;
 
 
-//Operações de grafo
+/* Operações de grafo */
+
+
+//Lê o grafo a partir da lista unidimentional com tamanho especificado.
+//O tamanho deve ter raíz quadrada inteira
 grafo* le_grafo(int* vertices, int tamanho);
+
+//Imprime o grafo g bem bonitinho
 void imprime_grafo(grafo* g);
 
 
-//Operações de vértice
+/* Operações de vértice */
 
+
+//Retorna o vértice i,j do grafo g
 vertice* get_vertice(grafo* g, int i, int j);
+//Imprime o vértico especificado (com vizinhos)
 void imprime_vertice(vertice* v);
+//Imprime os vizinhos do vértice especificado
 void imprime_vizinhos(vertice* v);
 
 #endif // GRAFOS_H_

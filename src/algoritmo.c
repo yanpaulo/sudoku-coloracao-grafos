@@ -86,6 +86,7 @@ vertice **get_vertices_cor(grafo *g, int cor)
     return lista;
 }
 
+//Retorna a quantidade de vizinhos com cor
 int conta_vizinhos_coloridos(vertice* v)
 {
     int num = 0;
@@ -124,8 +125,7 @@ int menor_cor(vertice *v)
 #pragma endregion
 
 #pragma region Algoritmo
-//Resolve as cores do grafo utilizando o algoritmo de Welsh–Powell
-//com ordenação por grau de saturação
+
 void resolve_grafo(grafo *g)
 {
     vertice **lista = get_vertices_cor(g, 0);

@@ -3,12 +3,7 @@
 #include <math.h>
 #include "grafos.h"
 
-vertice *get_vertice(grafo *g, int i, int j)
-{
-    return g->vertices[i * g->lado + j];
-}
-
-//O(3n)
+//Define os vizinhos do vértice v - O(3n)
 void define_vizinhos(vertice *v, int linha, int coluna, grafo *g)
 {
     v->vizinhos = calloc(sizeof(vertice **), (g->lado - 1) * 3);
@@ -48,6 +43,11 @@ void define_vizinhos(vertice *v, int linha, int coluna, grafo *g)
             }
         }
     }
+}
+
+vertice *get_vertice(grafo *g, int i, int j)
+{
+    return g->vertices[i * g->lado + j];
 }
 
 grafo *le_grafo(int *vertices, int tamanho)
