@@ -129,14 +129,10 @@ int menor_cor(vertice *v)
 void resolve_grafo(grafo *g)
 {
     vertice **lista = get_vertices_cor(g, 0);
-
-    while (*lista)
+    do
     {
         vertice *v = *lista;
-        int num_cor = 1;
-        for (num_cor = 1; tem_vizinhos_cor_igual(v, num_cor); ++num_cor)
-            ;
-        v->cor = num_cor;
+        int num_cor = menor_cor(v);
         ++lista;
         while (v)
         {
@@ -148,7 +144,8 @@ void resolve_grafo(grafo *g)
             v = *++lista;
         }
         lista = get_vertices_cor(g, 0);
-    }
+    } while (*lista);
+
 }
 
 #pragma endregion

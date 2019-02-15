@@ -102,7 +102,7 @@ void imprime_grafo(grafo *g)
     {
         for (int j = 0; j < g->lado; j++)
         {
-            printf("%d", get_vertice(g, i, j)->cor);
+            printf("%2d", get_vertice(g, i, j)->cor);
             if (j < g->lado - 1)
             {
                 printf(",");
