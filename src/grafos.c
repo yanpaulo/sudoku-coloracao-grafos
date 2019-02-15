@@ -50,7 +50,6 @@ void ordena(vertice **lista, int tamanho, int (*comparador)(vertice *, vertice *
     }
 }
 
-
 vertice **get_vertices_cor(grafo *g, int cor)
 {
     vertice **lista = (vertice **)calloc(g->tamanho, sizeof(vertice *) + 1);
@@ -64,7 +63,6 @@ vertice **get_vertices_cor(grafo *g, int cor)
         }
     }
     lista = realloc(lista, sizeof(vertice *) * num_elementos + 1);
-
     ordena(lista, num_elementos, compara_grau_saturacao);
 
     return lista;
@@ -122,42 +120,39 @@ int menor_cor(vertice **list)
     }
 }
 
-int is_vizinho(vertice* v1, vertice* v2)
+int is_vizinho(vertice *v1, vertice *v2)
 {
-    for(int i = 0; i < v1->num_vizinhos; i++)
+    for (int i = 0; i < v1->num_vizinhos; i++)
     {
-        if (v1->vizinhos[i] == v2) {
+        if (v1->vizinhos[i] == v2)
+        {
             return 1;
         }
-        
     }
-    
-    
     return 0;
 }
 
 void colore_grafo(grafo *g)
 {
-    int num_cor = 1;
     vertice **lista = get_vertices_cor(g, 0);
 
     while (*lista)
     {
-        vertice* v0 = *(lista++);
         vertice *v = *lista;
-        
-        v0->cor = num_cor;
+        int num_cor = 1;
+        for(num_cor = 1; tem_vizinhos_cor_igual(v, num_cor); ++num_cor);
+        v->cor = num_cor;
+        ++lista;
         while (v)
         {
-            if (!is_vizinho(v, v0) && !tem_vizinhos_cor_igual(v, num_cor))
+            if (!tem_vizinhos_cor_igual(v, num_cor))
             {
                 v->cor = num_cor;
             }
 
-            v = *(++lista);
+            v = *++lista;
         }
         lista = get_vertices_cor(g, 0);
-        ++num_cor;
     }
 }
 
