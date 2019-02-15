@@ -1,8 +1,19 @@
 #include <stdio.h>
 #include "algoritmo.h"
 
-int main() {
-    int map[] = {
+int main(int argc, char** argv) {
+    int* map;
+    int tamanho;
+
+    if (argc > 1)
+    {
+        map = le_arquivo(argv[1]);
+        for(tamanho = 0; map[tamanho] >= 0; tamanho++);
+    }
+    else
+    {
+        int matriz[] = 
+        {
         0, 2, 0, 5, 0, 1, 0, 9, 0,
         8, 0, 0, 2, 0, 3, 0, 0, 6,
         0, 3, 0, 0, 6, 0, 0, 7, 0,
@@ -12,8 +23,12 @@ int main() {
         0, 9, 0, 0, 3, 0, 0, 8, 0,
         2, 0, 0, 8, 0, 4, 0, 0, 7,
         0, 1, 0, 9, 0, 7, 0, 6, 0
-    };
-    grafo* g = le_grafo(map, sizeof(map) / sizeof(int));
+        };
+        map = matriz;
+        tamanho = sizeof(matriz) / sizeof(int);
+    }
+    
+    grafo* g = le_grafo(map, tamanho);
     printf("---------------\n");
     imprime_grafo(g);
     printf("---------------\n");

@@ -112,3 +112,25 @@ void imprime_grafo(grafo *g)
         printf("\n");
     }
 }
+
+int* le_arquivo(char* filename)
+{
+    FILE* f = fopen(filename, "r");
+    fseek(f, 0, SEEK_END);
+    int size = ftell(f);
+    fseek(f, 0, SEEK_SET);
+
+    int* buffer = calloc(size, sizeof(int));
+    size = 0;
+
+    while(!feof(f)){
+        int n;
+        fscanf(f, "%d", &n);
+        buffer[size++] = n;
+        printf("%d ", n);
+    }
+    buffer[size] = -1;
+    buffer = realloc(buffer, size * sizeof(int) + 1);
+
+    return buffer;
+}

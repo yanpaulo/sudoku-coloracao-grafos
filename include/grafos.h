@@ -22,6 +22,8 @@ typedef struct grafo
 
 /* Operações de grafo */
 
+//Lê um mapa a partir do arquivo especificado
+int* le_arquivo(char* filename);
 
 //Lê o grafo a partir da lista unidimentional com tamanho especificado.
 //O tamanho deve ter raíz quadrada inteira
