@@ -122,6 +122,20 @@ int menor_cor(vertice **list)
     }
 }
 
+int is_vizinho(vertice* v1, vertice* v2)
+{
+    for(int i = 0; i < v1->num_vizinhos; i++)
+    {
+        if (v1->vizinhos[i] == v2) {
+            return 1;
+        }
+        
+    }
+    
+    
+    return 0;
+}
+
 void colore_grafo(grafo *g)
 {
     int num_cor = 1;
@@ -129,10 +143,13 @@ void colore_grafo(grafo *g)
 
     while (*lista)
     {
+        vertice* v0 = *(lista++);
         vertice *v = *lista;
+        
+        v0->cor = num_cor;
         while (v)
         {
-            if (!tem_vizinhos_cor_igual(v, num_cor))
+            if (!is_vizinho(v, v0) && !tem_vizinhos_cor_igual(v, num_cor))
             {
                 v->cor = num_cor;
             }
