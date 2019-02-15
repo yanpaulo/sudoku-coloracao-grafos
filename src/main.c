@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "grafos.h"
+#include "algoritmo.h"
 
 int main() {
     int map[] = {
@@ -17,6 +17,6 @@ int main() {
     printf("---------------\n");
     imprime_grafo(g);
     printf("---------------\n");
-    colore_grafo(g);
+    resolve_grafo(g);
     imprime_grafo(g);
 }
