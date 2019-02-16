@@ -127,7 +127,6 @@ int* le_arquivo(char* filename)
         int n;
         fscanf(f, "%d", &n);
         buffer[size++] = n;
-        printf("%d ", n);
     }
     buffer[size] = -1;
     buffer = realloc(buffer, size * sizeof(int) + 1);
